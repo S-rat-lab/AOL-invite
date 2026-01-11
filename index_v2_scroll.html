@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Sharat & Sreekutty - Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&family=Playfair+Display:wght@400;700&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: #0d2818;
+            color: #D3D3D3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Background */
+        .background-photo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: url('final.jpg') center center / cover no-repeat;
+            filter: blur(3px) brightness(0.6);
+            opacity: 0.95;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(212,175,55,0.15), rgba(0,0,0,0.6));
+        }
+
+        /* Scroll Container */
+        .scroll-wrapper {
+            position: relative;
+            width: 95%;
+            max-width: 850px;
+            height: 95%;
+            max-height: 1200px;
+            perspective: 1500px;
+            cursor: pointer;
+        }
+
+        .scroll-wrapper.opened {
+            cursor: default;
+        }
+
+        /* Scroll Roll */
+        .scroll-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 2.5s cubic-bezier(0.68, -0.3, 0.265, 1.2);
+        }
+
+        /* Scroll Paper */
+        .scroll-paper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg,
+                rgba(26, 61, 46, 0.95) 0%,
+                rgba(42, 80, 64, 0.98) 50%,
+                rgba(26, 61, 46, 0.95) 100%
+            );
+            border: 4px solid;
+            border-image: linear-gradient(180deg, #FFD700, #D4AF37, #B8860B, #D4AF37, #FFD700) 1;
+            box-shadow:
+                0 0 60px rgba(212, 175, 55, 0.5),
+                inset 0 0 80px rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+            transform: scaleY(0.05);
+            transform-origin: top center;
+            transition: transform 2.5s cubic-bezier(0.68, -0.3, 0.265, 1.2);
+        }
+
+        .scroll-wrapper.opened .scroll-paper {
+            transform: scaleY(1);
+        }
+
+        /* Decorative Borders */
+        .scroll-paper::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .scroll-paper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('final.jpg') center center / cover no-repeat;
+            opacity: 0.25;
+            filter: blur(1px);
+            pointer-events: none;
+        }
+
+        /* Scroll Rods (Top and Bottom) */
+        .scroll-rod {
+            position: absolute;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(90deg, #3d2817, #5a3d1f, #3d2817);
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.7),
+                inset 0 2px 5px rgba(255, 215, 0, 0.3);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-rod::before,
+        .scroll-rod::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #FFD700, #B8860B);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+
+        .scroll-rod::before { left: 5%; }
+        .scroll-rod::after { right: 5%; }
+
+        .scroll-rod-top {
+            top: 0;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .scroll-rod-bottom {
+            bottom: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        /* Content Container */
+        .scroll-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 70px 30px 70px;
+            text-align: center;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 1.5s ease-in 1s;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scroll-wrapper.opened .scroll-content {
+            opacity: 1;
+        }
+
+        /* Styling for content */
+        .gold-heading {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(40px, 8vw, 64px) !important;
+            font-weight: 600;
+            background: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(212,175,55,0.8);
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(212,175,55,0.6)); }
+            50% { filter: drop-shadow(0 0 35px rgba(255,215,0,0.9)); }
+        }
+
+        .symbol {
+            font-size: clamp(50px, 10vw, 80px) !important;
+            margin: 15px 0;
+            filter: drop-shadow(0 0 20px rgba(212,175,55,0.8));
+        }
+
+        .divider {
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            margin: 25px auto;
+            box-shadow: 0 0 10px rgba(212,175,55,0.5);
+        }
+
+        .opening-text {
+            font-size: clamp(26px, 5vw, 44px) !important;
+            color: #E8E8E8;
+            font-style: italic;
+            line-height: 1.6;
+            margin: 25px 0;
+            text-shadow: 0 0 15px rgba(232,232,232,0.6);
+        }
+
+        .bride-groom-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(48px, 9vw, 90px) !important;
+            font-weight: 700;
+            background: linear-gradient(180deg, #F8F8F8, #D3D3D3, #B8B8B8, #D3D3D3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0 12px;
+            text-shadow: 0 2px 0 #E8E8E8, 0 0 25px rgba(192,192,192,0.8);
+            letter-spacing: 2px;
+        }
+
+        .parent-info {
+            font-size: clamp(22px, 4.5vw, 38px) !important;
+            color: #C0C0C0;
+            font-style: italic;
+            margin: 8px 0 25px;
+            line-height: 1.5;
+            text-shadow: 0 0 10px rgba(192,192,192,0.5);
+        }
+
+        .address {
+            font-size: clamp(22px, 4.5vw, 36px) !important;
+            color: #B8B8B8;
+            font-style: italic;
+            margin: 8px 0 30px;
+            text-shadow: 0 0 10px rgba(184,184,184,0.5);
+        }
+
+        .ampersand-large {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(60px, 11vw, 100px) !important;
+            background: linear-gradient(135deg, #FFD700, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 30px 0;
+            text-shadow: 0 0 25px rgba(212,175,55,0.8);
+        }
+
+        .section-header {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(34px, 6.5vw, 56px) !important;
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 35px 0 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(212,175,55,0.7);
+        }
+
+        .detail-text {
+            font-size: clamp(26px, 5.2vw, 46px) !important;
+            color: #D3D3D3;
+            margin: 12px 0;
+            line-height: 1.6;
+            text-shadow: 0 0 12px rgba(211,211,211,0.6);
+        }
+
+        .detail-text strong {
+            color: #E8E8E8;
+            font-weight: 600;
+        }
+
+        .location-link {
+            display: inline-block;
+            font-size: clamp(28px, 5.5vw, 48px) !important;
+            color: #C0C0C0;
+            font-style: italic;
+            text-decoration: none;
+            margin: 15px 0;
+            padding: 10px 15px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+            text-shadow: 0 0 15px rgba(192,192,192,0.7);
+        }
+
+        .location-link:hover {
+            border-bottom: 2px solid #D4AF37;
+        }
+
+        .location-icon {
+            font-size: clamp(32px, 6vw, 52px) !important;
+            margin-right: 8px;
+            filter: drop-shadow(0 0 12px rgba(255,215,0,0.8));
+        }
+
+        .closing-text {
+            font-size: clamp(28px, 5.5vw, 48px) !important;
+            color: #E8E8E8;
+            font-style: italic;
+            line-height: 1.6;
+            margin: 30px 0 15px;
+            text-shadow: 0 0 15px rgba(232,232,232,0.6);
+        }
+
+        .hosts-text {
+            font-size: clamp(30px, 6vw, 52px) !important;
+            color: #D3D3D3;
+            margin: 25px 0;
+            line-height: 1.7;
+            text-shadow: 0 0 12px rgba(211,211,211,0.6);
+        }
+
+        /* Tap to Open Text */
+        .tap-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(34px, 6.5vw, 52px) !important;
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(212,175,55,0.8);
+            z-index: 10;
+            animation: pulse 2s ease-in-out infinite;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .scroll-wrapper.opened .tap-hint {
+            opacity: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                filter: drop-shadow(0 0 20px rgba(212,175,55,0.6));
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                filter: drop-shadow(0 0 35px rgba(255,215,0,0.9));
+            }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            animation: sparkle-fall 3s linear forwards;
+        }
+
+        @keyframes sparkle-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .scroll-wrapper {
+                width: 98%;
+                height: 98%;
+            }
+
+            .scroll-content {
+                padding: 60px 20px 60px;
+            }
+
+            .scroll-rod {
+                height: 30px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .scroll-content {
+                padding: 55px 25px 55px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .scroll-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scroll-content::-webkit-scrollbar-track {
+            background: rgba(26, 61, 46, 0.3);
+            border-radius: 4px;
+        }
+
+        .scroll-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #D4AF37, #FFD700);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Music -->
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="background-photo"></div>
+    <div class="background-overlay"></div>
+
+    <div class="scroll-wrapper" id="scroll-wrapper">
+        <div class="tap-hint">Tap to Unfurl</div>
+
+        <div class="scroll-container">
+            <div class="scroll-paper">
+                <!-- Decorative Rods -->
+                <div class="scroll-rod scroll-rod-top"></div>
+                <div class="scroll-rod scroll-rod-bottom"></div>
+
+                <!-- Content -->
+                <div class="scroll-content">
+                    <div class="gold-heading">Jai Guru Dev</div>
+                    <div class="symbol">🪔</div>
+
+                    <div class="divider"></div>
+
+                    <div class="opening-text">
+                        With great happiness we invite you and your family to the<br>
+                        wedding ceremony of
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="bride-groom-name">Sharat Prabhakaran</div>
+                    <div class="parent-info">
+                        S/O Late O Maya Prabhakaran and Meena Prabhakaran
+                    </div>
+
+                    <div class="ampersand-large">&</div>
+
+                    <div class="bride-groom-name">Sreekutty Sreekandan</div>
+                    <div class="parent-info">
+                        D/O Sreekandan Nair and Sugadha Kumari
+                    </div>
+                    <div class="address">
+                        Sreekanda Sadhanam, Ponganadu, Thiruvananthapuram
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="section-header">✨ Muhurtham ✨</div>
+                    <div class="detail-text"><strong>Date:</strong> 25th January 2026</div>
+                    <div class="detail-text"><strong>Time:</strong> 12:11 PM – 12:31 PM</div>
+
+                    <div class="divider"></div>
+
+                    <div class="section-header">✨ Sweekaranam ✨</div>
+                    <div class="detail-text">Welcoming of the Groom and party</div>
+                    <div class="detail-text"><strong>Time:</strong> 11:00 AM</div>
+
+                    <div class="divider"></div>
+
+                    <div class="section-header">✨ Venue ✨</div>
+                    <a href="https://maps.app.goo.gl/CiDfJA3f4AzkYPtp6?g_st=aw" target="_blank" class="location-link">
+                        <span class="location-icon">📍</span>
+                        Crystal Convention Centre, Nagaroor, Thiruvananthapuram
+                    </a>
+
+                    <div class="divider"></div>
+
+                    <div class="closing-text">
+                        Looking forward to your precious presence.
+                    </div>
+
+                    <div class="closing-text">
+                        Seeking your blessings
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="hosts-text">
+                        Meena Prabhakaran<br>
+                        Bharat Prabhakaran
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scrollWrapper = document.getElementById('scroll-wrapper');
+        const audio = document.getElementById('bg-music');
+        let isOpened = false;
+
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.innerHTML = ['✨', '⭐', '🌟', '💫'][Math.floor(Math.random() * 4)];
+            sparkle.style.left = Math.random() * 100 + 'vw';
+            sparkle.style.top = '-50px';
+            sparkle.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            sparkle.style.color = ['#FFD700', '#FFFFFF', '#D4AF37'][Math.floor(Math.random() * 3)];
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => sparkle.remove(), 3000);
+        }
+
+        function unfurlScroll() {
+            if (isOpened) return;
+            isOpened = true;
+
+            scrollWrapper.classList.add('opened');
+
+            // Start music
+            audio.volume = 0.4;
+            audio.play().catch(() => {
+                console.log('Music playback prevented by browser');
+            });
+
+            // Create sparkle effects
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => createSparkle(), i * 100);
+            }
+
+            // Continue sparkles periodically
+            const sparkleInterval = setInterval(() => {
+                createSparkle();
+            }, 500);
+
+            setTimeout(() => clearInterval(sparkleInterval), 5000);
+        }
+
+        scrollWrapper.addEventListener('click', unfurlScroll);
+
+        // Prevent scrolling before opened
+        scrollWrapper.addEventListener('wheel', (e) => {
+            if (!isOpened) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+
+</body>
+</html>

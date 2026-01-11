@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Sharat & Sreekutty - Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: #0d2818;
+            color: #D3D3D3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Background */
+        .background-photo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: url('final.jpg') center center / cover no-repeat;
+            filter: blur(3px) brightness(0.65);
+            opacity: 0.95;
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(212,175,55,0.12), rgba(0,0,0,0.6));
+        }
+
+        /* Card Container */
+        .card-scene {
+            width: 95%;
+            max-width: 800px;
+            height: 95%;
+            max-height: 1100px;
+            perspective: 2000px;
+            cursor: pointer;
+        }
+
+        .card-scene.flipped {
+            cursor: default;
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1.5s cubic-bezier(0.68, -0.3, 0.265, 1.2);
+        }
+
+        .card-scene.flipped .card {
+            transform: rotateY(180deg);
+        }
+
+        /* Card Faces */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            background: linear-gradient(180deg,
+                rgba(26, 61, 46, 0.96) 0%,
+                rgba(42, 80, 64, 0.98) 50%,
+                rgba(26, 61, 46, 0.96) 100%
+            );
+            border: 4px solid;
+            border-image: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B, #D4AF37, #FFD700) 1;
+            border-radius: 15px;
+            box-shadow:
+                0 0 60px rgba(212, 175, 55, 0.6),
+                inset 0 0 100px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+        }
+
+        .card-face::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.35);
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card-face::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('final.jpg') center center / cover no-repeat;
+            opacity: 0.2;
+            filter: blur(1px);
+            pointer-events: none;
+        }
+
+        /* Front Face */
+        .card-front {
+            z-index: 2;
+            text-align: center;
+        }
+
+        .card-front > * {
+            position: relative;
+            z-index: 3;
+        }
+
+        .front-symbol {
+            font-size: clamp(70px, 13vw, 110px) !important;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 25px rgba(212,175,55,0.9));
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 25px rgba(212,175,55,0.7));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 45px rgba(255,215,0,1));
+                transform: scale(1.05);
+            }
+        }
+
+        .front-blessing {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(44px, 8.5vw, 72px) !important;
+            font-weight: 600;
+            background: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B, #FFD700);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(212,175,55,0.8);
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+            animation: gradient-shift 4s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .front-names {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(56px, 10vw, 96px) !important;
+            font-weight: 700;
+            background: linear-gradient(180deg, #F8F8F8, #D3D3D3, #B8B8B8, #D3D3D3, #F8F8F8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 0 #E8E8E8, 0 0 30px rgba(192,192,192,0.8);
+            margin: 25px 0;
+            line-height: 1.3;
+        }
+
+        .front-ampersand {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(50px, 9vw, 80px) !important;
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 15px 0;
+        }
+
+        .front-date {
+            font-size: clamp(32px, 6vw, 52px) !important;
+            color: #E8E8E8;
+            font-style: italic;
+            margin: 30px 0;
+            text-shadow: 0 0 20px rgba(232,232,232,0.7);
+            letter-spacing: 1px;
+        }
+
+        .tap-to-open {
+            font-size: clamp(26px, 5vw, 42px) !important;
+            color: #D4AF37;
+            font-style: italic;
+            margin-top: 40px;
+            text-shadow: 0 0 15px rgba(212,175,55,0.7);
+            animation: fade-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes fade-pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Back Face */
+        .card-back {
+            transform: rotateY(180deg);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 50px 30px;
+            text-align: center;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .card-back > * {
+            position: relative;
+            z-index: 3;
+        }
+
+        .back-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(38px, 7vw, 62px) !important;
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .back-symbol {
+            font-size: clamp(48px, 9vw, 72px) !important;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(212,175,55,0.8));
+        }
+
+        .back-divider {
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            margin: 25px auto;
+            box-shadow: 0 0 10px rgba(212,175,55,0.5);
+        }
+
+        .back-opening {
+            font-size: clamp(24px, 4.8vw, 40px) !important;
+            color: #E8E8E8;
+            font-style: italic;
+            line-height: 1.6;
+            margin: 20px 0;
+            text-shadow: 0 0 12px rgba(232,232,232,0.6);
+        }
+
+        .back-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(44px, 8.5vw, 78px) !important;
+            font-weight: 700;
+            background: linear-gradient(180deg, #F8F8F8, #D3D3D3, #B8B8B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 18px 0 10px;
+            text-shadow: 0 1px 0 #E8E8E8, 0 0 20px rgba(192,192,192,0.7);
+        }
+
+        .back-parent {
+            font-size: clamp(21px, 4.2vw, 36px) !important;
+            color: #C0C0C0;
+            font-style: italic;
+            margin: 6px 0 20px;
+            line-height: 1.5;
+            text-shadow: 0 0 10px rgba(192,192,192,0.5);
+        }
+
+        .back-address {
+            font-size: clamp(21px, 4.2vw, 34px) !important;
+            color: #B8B8B8;
+            font-style: italic;
+            margin: 6px 0 25px;
+            text-shadow: 0 0 10px rgba(184,184,184,0.5);
+        }
+
+        .back-ampersand {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(52px, 9.5vw, 85px) !important;
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 25px 0;
+        }
+
+        .back-section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(32px, 6.2vw, 52px) !important;
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 30px 0 15px;
+            letter-spacing: 2px;
+        }
+
+        .back-detail {
+            font-size: clamp(24px, 4.8vw, 42px) !important;
+            color: #D3D3D3;
+            margin: 10px 0;
+            line-height: 1.6;
+            text-shadow: 0 0 10px rgba(211,211,211,0.6);
+        }
+
+        .back-detail strong {
+            color: #E8E8E8;
+        }
+
+        .back-location {
+            display: inline-block;
+            font-size: clamp(26px, 5.2vw, 44px) !important;
+            color: #C0C0C0;
+            font-style: italic;
+            text-decoration: none;
+            margin: 12px 0;
+            padding: 10px 15px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+            text-shadow: 0 0 12px rgba(192,192,192,0.7);
+        }
+
+        .back-location:hover {
+            border-bottom: 2px solid #D4AF37;
+        }
+
+        .back-location-icon {
+            font-size: clamp(30px, 5.8vw, 48px) !important;
+            margin-right: 8px;
+            filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
+        }
+
+        .back-closing {
+            font-size: clamp(26px, 5.2vw, 44px) !important;
+            color: #E8E8E8;
+            font-style: italic;
+            line-height: 1.6;
+            margin: 28px 0 12px;
+            text-shadow: 0 0 12px rgba(232,232,232,0.6);
+        }
+
+        .back-hosts {
+            font-size: clamp(28px, 5.6vw, 48px) !important;
+            color: #D3D3D3;
+            margin: 22px 0;
+            line-height: 1.7;
+            text-shadow: 0 0 10px rgba(211,211,211,0.6);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .card-scene {
+                width: 98%;
+                height: 98%;
+            }
+
+            .card-face {
+                padding: 30px 20px;
+            }
+
+            .card-back {
+                padding: 40px 20px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .card-face {
+                padding: 25px 20px;
+            }
+
+            .card-back {
+                padding: 35px 20px;
+            }
+        }
+
+        /* Custom Scrollbar for Back */
+        .card-back::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .card-back::-webkit-scrollbar-track {
+            background: rgba(26, 61, 46, 0.3);
+            border-radius: 4px;
+        }
+
+        .card-back::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #D4AF37, #FFD700);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Music -->
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="background-photo"></div>
+    <div class="background-overlay"></div>
+
+    <div class="card-scene" id="card-scene">
+        <div class="card">
+            <!-- Front Face -->
+            <div class="card-face card-front">
+                <div class="front-symbol">🪔</div>
+                <div class="front-blessing">Jai Guru Dev</div>
+                <div class="front-names">Sharat</div>
+                <div class="front-ampersand">&</div>
+                <div class="front-names">Sreekutty</div>
+                <div class="front-date">25th January 2026</div>
+                <div class="tap-to-open">Tap to Open Invitation</div>
+            </div>
+
+            <!-- Back Face -->
+            <div class="card-face card-back">
+                <div class="back-title">Jai Guru Dev</div>
+                <div class="back-symbol">🪔</div>
+
+                <div class="back-divider"></div>
+
+                <div class="back-opening">
+                    With great happiness we invite you and your family to the<br>
+                    wedding ceremony of
+                </div>
+
+                <div class="back-divider"></div>
+
+                <div class="back-name">Sharat Prabhakaran</div>
+                <div class="back-parent">
+                    S/O Late O Maya Prabhakaran and Meena Prabhakaran
+                </div>
+
+                <div class="back-ampersand">&</div>
+
+                <div class="back-name">Sreekutty Sreekandan</div>
+                <div class="back-parent">
+                    D/O Sreekandan Nair and Sugadha Kumari
+                </div>
+                <div class="back-address">
+                    Sreekanda Sadhanam, Ponganadu, Thiruvananthapuram
+                </div>
+
+                <div class="back-divider"></div>
+
+                <div class="back-section-title">✨ Muhurtham ✨</div>
+                <div class="back-detail"><strong>Date:</strong> 25th January 2026</div>
+                <div class="back-detail"><strong>Time:</strong> 12:11 PM – 12:31 PM</div>
+
+                <div class="back-divider"></div>
+
+                <div class="back-section-title">✨ Sweekaranam ✨</div>
+                <div class="back-detail">Welcoming of the Groom and party</div>
+                <div class="back-detail"><strong>Time:</strong> 11:00 AM</div>
+
+                <div class="back-divider"></div>
+
+                <div class="back-section-title">✨ Venue ✨</div>
+                <a href="https://maps.app.goo.gl/CiDfJA3f4AzkYPtp6?g_st=aw" target="_blank" class="back-location">
+                    <span class="back-location-icon">📍</span>
+                    Crystal Convention Centre, Nagaroor, Thiruvananthapuram
+                </a>
+
+                <div class="back-divider"></div>
+
+                <div class="back-closing">
+                    Looking forward to your precious presence.
+                </div>
+
+                <div class="back-closing">
+                    Seeking your blessings
+                </div>
+
+                <div class="back-divider"></div>
+
+                <div class="back-hosts">
+                    Meena Prabhakaran<br>
+                    Bharat Prabhakaran
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cardScene = document.getElementById('card-scene');
+        const audio = document.getElementById('bg-music');
+        let isFlipped = false;
+
+        cardScene.addEventListener('click', function() {
+            if (!isFlipped) {
+                isFlipped = true;
+                cardScene.classList.add('flipped');
+
+                // Start music
+                audio.volume = 0.4;
+                audio.play().catch(() => {
+                    console.log('Music playback prevented by browser');
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

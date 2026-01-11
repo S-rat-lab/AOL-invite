@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Sharat & Sreekutty - Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Cinzel', serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Invitation Container */
+        .invitation-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            cursor: pointer;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .invitation-wrapper.opened {
+            cursor: default;
+        }
+
+        /* The actual invitation image */
+        .invitation-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            max-height: 100vh;
+            object-fit: contain;
+            box-shadow:
+                0 0 60px rgba(212, 175, 55, 0.4),
+                0 0 100px rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .invitation-wrapper.opened .invitation-image {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Overlay with tap instruction */
+        .tap-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
+            pointer-events: none;
+        }
+
+        .invitation-wrapper.opened .tap-overlay {
+            opacity: 0;
+        }
+
+        .tap-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(38px, 7vw, 64px);
+            background: linear-gradient(135deg, #FFD700, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(212,175,55,0.8);
+            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .tap-icon {
+            font-size: clamp(54px, 10vw, 90px);
+            filter: drop-shadow(0 0 20px rgba(212,175,55,0.8));
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 20px rgba(212,175,55,0.6));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 35px rgba(255,215,0,0.9));
+            }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(212,175,55,0.7));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(255,215,0,1));
+                transform: scale(1.1);
+            }
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .invitation-image {
+                width: 100%;
+                max-width: 100%;
+                max-height: 100vh;
+            }
+        }
+
+        /* Landscape mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .invitation-wrapper {
+                overflow-y: auto;
+                align-items: flex-start;
+                padding: 20px 0;
+            }
+
+            .invitation-image {
+                max-height: none;
+                height: auto;
+            }
+        }
+
+        /* Desktop - allow scrolling for very tall images */
+        @media (min-width: 769px) {
+            .invitation-wrapper {
+                overflow: auto;
+            }
+
+            .invitation-image {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* Print friendly */
+        @media print {
+            .tap-overlay {
+                display: none;
+            }
+
+            .invitation-image {
+                opacity: 1 !important;
+                transform: scale(1) !important;
+                max-width: 100%;
+                max-height: 100%;
+                box-shadow: none;
+            }
+        }
+
+        /* Custom scrollbar for desktop */
+        .invitation-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .invitation-wrapper::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+
+        .invitation-wrapper::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #D4AF37, #FFD700);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .invitation-wrapper::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #FFD700, #D4AF37);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Music -->
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="invitation-wrapper" id="invitation-wrapper">
+        <!-- Tap to View Overlay -->
+        <div class="tap-overlay">
+            <div class="tap-text">Tap to View Invitation</div>
+            <div class="tap-icon">🪔</div>
+        </div>
+
+        <!-- The Crystal Clear Invitation Image -->
+        <img src="final.jpg" alt="Wedding Invitation - Sharat & Sreekutty" class="invitation-image" id="invitation-image">
+    </div>
+
+    <script>
+        const wrapper = document.getElementById('invitation-wrapper');
+        const audio = document.getElementById('bg-music');
+        let isOpened = false;
+
+        function openInvitation() {
+            if (isOpened) return;
+            isOpened = true;
+
+            wrapper.classList.add('opened');
+
+            // Start music
+            audio.volume = 0.3;
+            audio.play().catch(() => {
+                console.log('Music playback prevented by browser');
+            });
+        }
+
+        // Click to open
+        wrapper.addEventListener('click', openInvitation);
+
+        // Also allow keyboard interaction (Enter/Space)
+        document.addEventListener('keydown', (e) => {
+            if (!isOpened && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                openInvitation();
+            }
+        });
+
+        // Preload the image for smoother display
+        window.addEventListener('load', () => {
+            const img = document.getElementById('invitation-image');
+            if (img.complete) {
+                console.log('Image loaded successfully');
+            }
+        });
+    </script>
+
+</body>
+</html>
